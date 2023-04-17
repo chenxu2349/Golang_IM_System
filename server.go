@@ -45,7 +45,7 @@ func (this *Server) Start() {
 			continue
 		}
 
-		// do handler
+		// do handler启动协程处理handler
 		go this.Handler(conn)
 	}
 
