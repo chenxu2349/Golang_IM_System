@@ -9,7 +9,7 @@ type User struct {
 	conn net.Conn
 }
 
-// 创建一个用户的接口
+// NewUser 创建一个用户的接口
 func NewUser(conn net.Conn) *User {
 	userAddr := conn.RemoteAddr().String()
 
@@ -26,7 +26,7 @@ func NewUser(conn net.Conn) *User {
 	return user
 }
 
-// 监听当前User channel的方法，一旦有消息就直接发送给对端客户端
+// ListenMessage 监听当前User channel的方法，一旦有消息就直接发送给对端客户端
 func (this *User) ListenMessage() {
 	for {
 		msg := <-this.C

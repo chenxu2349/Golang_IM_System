@@ -16,3 +16,6 @@
 添加用户，新增广播消息方法，新增监听广播消息channel的方法，然后启用协程去监听server中
 的Message
 ![img.png](images/img1.png)
+
+## 三、将用户消息进行广播
+![img.png](images/img3.png)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"sync"
 )
@@ -18,7 +19,7 @@ type Server struct {
 	Message chan string
 }
 
-// 创建一个server的接口
+// NewServer 创建一个server的接口
 func NewServer(ip string, port int) *Server {
 	server := &Server{
 		Ip:        ip,
@@ -43,21 +44,44 @@ func (this *Server) Handler(conn net.Conn) {
 	this.mapLock.Unlock()
 
 	// 广播当前用户上线信息，那就需要写一个广播方法
-	this.BroadCast(user, "is online...")
+	this.BroadCast(user, "**********is online...**********")
+
+	//接收客户端发送的消息
+	go func() {
+		buf := make([]byte, 4096)
+		for {
+			n, err := conn.Read(buf)
+			if n == 0 {
+				this.BroadCast(user, "**********log out...**********")
+				return
+			}
+
+			if err != nil && err != io.EOF {
+				fmt.Println("Conn read err : ", err)
+				return
+			}
+
+			// 提取用户的消息（去除\n）
+			msg := string(buf[:n-1])
+
+			// 将得到的消息进行广播
+			this.BroadCast(user, msg)
+		}
+	}()
 
 	// 当前Handler阻塞
 	select {}
 
 }
 
-// 广播消息方法
+// BroadCast 广播消息方法
 func (this *Server) BroadCast(user *User, msg string) {
 	sendMsg := "[" + user.Addr + "]" + user.Name + ":" + msg
 
 	this.Message <- sendMsg
 }
 
-// 启用一个协程监听Message消息，一旦有消息就发送给全部在线User
+// MessageListener 启用一个协程监听Message消息，一旦有消息就发送给全部在线User
 func (this *Server) MessageListener() {
 	for {
 		msg := <-this.Message
@@ -70,7 +94,7 @@ func (this *Server) MessageListener() {
 	}
 }
 
-// 启动服务器的接口
+// Start 启动服务器的接口
 func (this *Server) Start() {
 	// socket listen
 	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", this.Ip, this.Port))
