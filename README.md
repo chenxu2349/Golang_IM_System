@@ -28,3 +28,6 @@
 
 ## 六、修改用户名
 ![img.png](images/img6.png)
+
+## 七、超时强踢功能
+![img.png](images/img7.png)
