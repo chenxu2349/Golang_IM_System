@@ -31,3 +31,6 @@
 
 ## 七、超时强踢功能
 ![img.png](images/img7.png)
+
+## 八、私聊功能
+![img.png](images/img8.png)
