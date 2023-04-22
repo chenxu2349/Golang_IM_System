@@ -34,3 +34,7 @@
 
 ## 八、私聊功能
 ![img.png](images/img8.png)
+
+## 九、客户端实现
+新建一个目录用于存放client.go，因为里面有另外一个main函数与主包冲突
+![img.png](images/img9_1.png)

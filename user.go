@@ -41,7 +41,7 @@ func (this *User) Online() {
 	this.server.mapLock.Unlock()
 
 	// 广播当前用户上线信息，那就需要写一个广播方法
-	this.server.BroadCast(this, "********** is Online... **********")
+	this.server.BroadCast(this, ">>>>> is Online... ")
 }
 
 // Offline 用户下线业务
@@ -53,7 +53,7 @@ func (this *User) Offline() {
 	this.server.mapLock.Unlock()
 
 	// 广播当前用户上线信息，那就需要写一个广播方法
-	this.server.BroadCast(this, "********** is Offline... **********")
+	this.server.BroadCast(this, ">>>>> is Offline... ")
 }
 
 // SendMsg 向当前用户的客户端发消息
