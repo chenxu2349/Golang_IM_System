@@ -37,4 +37,6 @@
 
 ## 九、客户端实现
 新建一个目录用于存放client.go，因为里面有另外一个main函数与主包冲突
+先go build出可执行文件client.exe，然后./client -h(-ip, -port)使用
 ![img.png](images/img9_1.png)
+![img.png](images/img9_2.png)
