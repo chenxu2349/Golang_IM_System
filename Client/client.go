@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"net"
+	"os"
 )
 
 type Client struct {
@@ -54,6 +56,32 @@ func (client *Client) menu() bool {
 	}
 }
 
+// DealResponse 用于异步处理服务端消息的协程，防止程序串行
+func (client *Client) DealResponse() {
+	// 一旦client.conn有数据，就直接拷贝到stdout标准输出上，永久阻塞监听，用于输出打印来自服务端的消息
+	io.Copy(os.Stdout, client.conn) // 它是永久阻塞的
+	// 等价于下面这段代码
+	//for {
+	//	buf := make([]byte, 1024)
+	//	client.conn.Read(buf)
+	//	fmt.Println(buf)
+	//}
+}
+
+func (client *Client) UpdateName() bool {
+	fmt.Println(">>>>>请输入用户名:")
+	fmt.Scanln(&client.Name)
+
+	sendMsg := "rename|" + client.Name + "\n"
+	_, err := client.conn.Write([]byte(sendMsg))
+	if err != nil {
+		fmt.Println("conn.Write err : ", err)
+		return false
+	}
+
+	return true
+}
+
 func (client *Client) Run() {
 	for client.flag != 0 {
 		for client.menu() != true {
@@ -69,6 +97,7 @@ func (client *Client) Run() {
 		case 3:
 			// 更改用户名
 			fmt.Println("更改用户名已选择...")
+			client.UpdateName()
 		case 0:
 			// 退出客户端
 			// 选0的时候client.flag被赋值0，不满足上面for循环的条件，所以退出
@@ -99,6 +128,9 @@ func main() {
 		fmt.Println(">>>>> connect failed...")
 		return
 	}
+
+	// 创建成功后，单独开启一个协程用于处理server的回执消息
+	go client.DealResponse()
 
 	fmt.Println(">>>>> connect success...")
 

@@ -99,7 +99,7 @@ func (this *User) DoMessage(msg string) {
 
 	} else if len(msg) > 7 && msg[:7] == "rename|" {
 		// 更改用户名消息格式为：rename|张三
-		newName := msg[8:]
+		newName := msg[7:]
 
 		// 判断新名字是否已经存在
 		_, ok := this.server.OnlineMap[newName]
