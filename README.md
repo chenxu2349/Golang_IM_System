@@ -39,4 +39,10 @@
 新建一个目录用于存放client.go，因为里面有另外一个main函数与主包冲突
 先go build出可执行文件client.exe，然后./client -h(-ip, -port)使用
 ![img.png](images/img9_1.png)
+<br>
+<br>
 ![img.png](images/img9_2.png)
+<br>
+<br>
+菜单显示：新增flag属性，新增menu()方法获取用户输入，新增Run()方法主业务循环，最后在
+main函数中调用Run()方法
